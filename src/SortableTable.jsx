@@ -35,23 +35,30 @@ export default class extends Component {
     }
 
     componentDidMount() {
+        this.setEvents();
+    }
+
+    setEvents() {
         const rows = document.querySelectorAll('.rc-table-row');
         const length = rows.length - 1;
+
         rows.forEach((row, i) => {
             row.draggable = length !== i;
 
             row.ondragstart = (ev) => {
                 ev.dataTransfer.setData('data', i);
             };
+
             row.ondragover = (ev) => {
                 ev.preventDefault();
             };
+
             row.ondrop = (ev) => {
                 const startIndex = ev.dataTransfer.getData('data');
+
                 if (i === length || startIndex === i || startIndex === length) {
                     return;
                 }
-
                 ev.preventDefault();
                 this.handleDrop(startIndex, i);
             };
@@ -64,8 +71,9 @@ export default class extends Component {
 
         data[startIndex] = data[stopIndex];
         data[stopIndex] = temp;
+
         this.setState({ data });
-        return;
+        this.setEvents();
     }
 
     render() {
