@@ -33,34 +33,7 @@ export default class extends Component {
 
         this.handleDrop = this.handleDrop.bind(this);
     }
-    shouldComponentUpdate(nextProps, nextState) {
-        console.log('hi');
-        const rows = document.querySelector('.rc-table-tbody').children;
-        // console.log('rows', rows);
-        const length = rows.length - 1;
-        for (let i = 0; i === length; i++) {
-            rows[i].draggable = length !== i;
 
-            rows[i].ondragstart = (ev) => {
-              console.log('elem', ev.target);
-
-                ev.dataTransfer.setData('data', i);
-            };
-            rows[i].ondragover = (ev) => {
-                ev.preventDefault();
-            };
-            rows[i].ondrop = (ev) => {
-                const startIndex = ev.dataTransfer.getData('data');
-                if (i === length || startIndex === i || startIndex === length) {
-                    return;
-                }
-
-                ev.preventDefault();
-                this.handleDrop(startIndex, i);
-            };
-        }
-        return true;
-    }
     componentDidMount() {
         const rows = document.querySelectorAll('.rc-table-row');
         const length = rows.length - 1;
@@ -68,7 +41,6 @@ export default class extends Component {
             row.draggable = length !== i;
 
             row.ondragstart = (ev) => {
-                console.log('elem', ev.target);
                 ev.dataTransfer.setData('data', i);
             };
             row.ondragover = (ev) => {
@@ -89,8 +61,7 @@ export default class extends Component {
     handleDrop(startIndex, stopIndex) {
         const data = this.state.data;
         const temp = data[startIndex];
-        console.log('start', startIndex);
-        console.log('end', stopIndex);
+
         data[startIndex] = data[stopIndex];
         data[stopIndex] = temp;
         this.setState({ data });
@@ -99,7 +70,6 @@ export default class extends Component {
 
     render() {
         const { data } = this.state;
-        console.log('rerendering');
         return (
             <div className="container">
                 <Table columns={columns} data={data} />
