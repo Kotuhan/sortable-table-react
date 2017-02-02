@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import Table from 'rc-table';
-//import styles from './index.styl';
+import Dragula from 'react-dragula';
+import styles from './index.styl';
 
 const columns = [
     {
@@ -35,7 +36,8 @@ export default class extends Component {
     }
 
     componentDidMount() {
-        this.setEvents();
+        console.log(document.querySelector('.rc-table-tbody'));
+        Dragula([document.querySelector('.rc-table-tbody')], { mirrorContainer: document.querySelector('.rc-table') });
     }
 
     setEvents() {

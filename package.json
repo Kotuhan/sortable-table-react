@@ -49,6 +49,7 @@
     "classnames": "^2.2.5",
     "rc-table": "^5.2.8",
     "react-addons-shallow-compare": "^0.14.0 || ^15.0.0",
+    "react-dragula": "^1.1.17",
     "react-sortable": "^1.2.0"
   },
   "devDependencies": {
