@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import Table from 'rc-table';
-import Dragula from 'react-dragula';
-import styles from './index.styl';
+import Sortable from 'sortablejs';
 
 const columns = [
     {
@@ -31,51 +30,20 @@ export default class extends Component {
         this.state = {
             data
         };
-
-        this.handleDrop = this.handleDrop.bind(this);
     }
 
     componentDidMount() {
-        console.log(document.querySelector('.rc-table-tbody'));
-        Dragula([document.querySelector('.rc-table-tbody')], { mirrorContainer: document.querySelector('.rc-table') });
-    }
+        const tableRows = document.querySelector('.rc-table-tbody');
 
-    setEvents() {
-        const rows = document.querySelectorAll('.rc-table-row');
-        const length = rows.length - 1;
+        tableRows.lastChild.className += ' disabled';
 
-        rows.forEach((row, i) => {
-            row.draggable = length !== i;
-
-            row.ondragstart = (ev) => {
-                ev.dataTransfer.setData('data', i);
-            };
-
-            row.ondragover = (ev) => {
-                ev.preventDefault();
-            };
-
-            row.ondrop = (ev) => {
-                const startIndex = ev.dataTransfer.getData('data');
-
-                if (i === length || startIndex === i || startIndex === length) {
-                    return;
-                }
-                ev.preventDefault();
-                this.handleDrop(startIndex, i);
-            };
+        Sortable.create(tableRows, {
+            animation: 150,
+            filter: '.disabled',
+            onMove: (event) => {
+                return !event.related.classList.contains('disabled');
+            }
         });
-    }
-
-    handleDrop(startIndex, stopIndex) {
-        const data = this.state.data;
-        const temp = data[startIndex];
-
-        data[startIndex] = data[stopIndex];
-        data[stopIndex] = temp;
-
-        this.setState({ data });
-        this.setEvents();
     }
 
     render() {
