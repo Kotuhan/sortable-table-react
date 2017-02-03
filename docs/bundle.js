@@ -9950,7 +9950,7 @@ var columns = [{
     title: 'Address', dataIndex: 'address', key: 'address', width: 200
 }];
 
-var data = [{ name: 'Jack', age: 10, address: 'some where', key: '1', priority: '1' }, { name: 'Rose', age: 20, address: 'some where', key: '2', priority: '2' }, { name: 'Jack', age: 30, address: 'some where', key: '3', priority: '3' }, { name: 'Rose', age: 40, address: 'some where', key: '4', priority: '4' }];
+var data = [{ name: '1', age: 10, address: 'some where', key: '1', priority: '1' }, { name: '2', age: 20, address: 'some where', key: '2', priority: '2' }, { name: '3', age: 30, address: 'some where', key: '3', priority: '3' }, { name: '4', age: 40, address: 'some where', key: '4', priority: '4' }, { name: '5', age: 50, address: 'some where', key: '5', priority: '5' }, { name: '6', age: 600, address: 'some where', key: '6', priority: '6' }];
 
 var _default = function (_Component) {
     _inherits(_default, _Component);
@@ -9969,15 +9969,46 @@ var _default = function (_Component) {
     _createClass(_default, [{
         key: 'componentDidMount',
         value: function componentDidMount() {
+            var _this2 = this;
+
             var tableRows = document.querySelector('.rc-table-tbody');
 
             tableRows.lastChild.className += ' disabled';
 
+            var handleDrop = function handleDrop(startIndex, stopIndex) {
+                var data = _this2.state.data;
+
+                var arrayMove = function arrayMove(arr, fromIndex, stopIndex) {
+                    var element = arr[startIndex];
+
+                    arr.splice(startIndex, 1);
+                    arr.splice(stopIndex, 0, element);
+                    arr[startIndex].priority = startIndex + 1;
+                    arr[stopIndex].priority = stopIndex + 1;
+
+                    if (startIndex > stopIndex) {
+                        var _ref = [stopIndex, startIndex];
+                        startIndex = _ref[0];
+                        stopIndex = _ref[1];
+                    }
+
+                    for (var i = startIndex; i < stopIndex; i++) {
+                        arr[i].priority = i + 1;
+                    }
+                };
+
+                arrayMove(data, startIndex, stopIndex);
+                _this2.setState({ data: data });
+            };
+
             _sortablejs2.default.create(tableRows, {
                 animation: 150,
                 filter: '.disabled',
-                onMove: function onMove(event) {
-                    return !event.related.classList.contains('disabled');
+                onMove: function onMove(ev) {
+                    return !ev.related.classList.contains('disabled');
+                },
+                onEnd: function onEnd(ev) {
+                    handleDrop(ev.oldIndex, ev.newIndex);
                 }
             });
         }
@@ -27212,4 +27243,4 @@ _reactDom2.default.render(_react2.default.createElement(App, null), document.get
 
 /***/ })
 /******/ ]);
-//# sourceMappingURL=bundle.js.map?ca7e8f199117c85a5b5e
+//# sourceMappingURL=bundle.js.map?e5dd8658f7821930c9dd
